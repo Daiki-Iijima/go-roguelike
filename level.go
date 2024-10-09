@@ -38,11 +38,14 @@ func (level *Level) GetIndexFromXY(x, y int) int {
 // CreateTiles マップの生成と
 func (level *Level) CreateTiles() []MapTile {
 	gd := NewGameData()
-	//	0個の要素を持ったMapTile型のスライスを生成
-	tiles := make([]MapTile, 0)
+	//	画面のサイズ分のタイル配列を確保
+	tiles := make([]MapTile, gd.ScreenWidth*gd.ScreenHeight)
+
+	index := 0
 
 	for x := 0; x < gd.ScreenWidth; x++ {
 		for y := 0; y < gd.ScreenHeight; y++ {
+			index = level.GetIndexFromXY(x, y)
 			//	最外周(マップの端)の場合
 			if x == 0 || x == gd.ScreenWidth-1 || y == 0 || y == gd.ScreenHeight-1 {
 				wall, _, err := ebitenutil.NewImageFromFile("assets/wall.png")
@@ -57,7 +60,7 @@ func (level *Level) CreateTiles() []MapTile {
 					Image:   wall,
 				}
 
-				tiles = append(tiles, tile)
+				tiles[index] = tile
 			} else {
 				floor, _, err := ebitenutil.NewImageFromFile("assets/floor.png")
 				if err != nil {
@@ -69,10 +72,25 @@ func (level *Level) CreateTiles() []MapTile {
 					Blocked: false,
 					Image:   floor,
 				}
-				tiles = append(tiles, tile)
+
+				tiles[index] = tile
 			}
 		}
 	}
 
 	return tiles
+}
+
+// DrawLevel レベルを描画する
+func (level *Level) DrawLevel(screen *ebiten.Image) {
+	//	Mapを描画
+	gd := NewGameData()
+	for x := 0; x < gd.ScreenWidth; x++ {
+		for y := 0; y < gd.ScreenHeight; y++ {
+			tile := level.Tiles[level.GetIndexFromXY(x, y)]
+			op := &ebiten.DrawImageOptions{}
+			op.GeoM.Translate(float64(tile.PixelX), float64(tile.PixelY))
+			screen.DrawImage(tile.Image, op)
+		}
+	}
 }
