@@ -6,28 +6,16 @@ import (
 	"log"
 )
 
-// GameData グローバルゲームデータを保存する構造体
-type GameData struct {
-	//	画面幅
-	ScreenWidth int
-	//	画面高さ
-	ScreenHeight int
-	//	タイル幅
-	TileWidth int
-	//	タイル高さ
-	TIleHeight int
+// Level マップタイルの配列を持つ構造体
+type Level struct {
+	Tiles []MapTile
 }
 
-// NewGameData GameDataのコンストラクタ関数
-func NewGameData() GameData {
-	g := GameData{
-		ScreenWidth:  80,
-		ScreenHeight: 50,
-		TileWidth:    16,
-		TIleHeight:   16,
-	}
-
-	return g
+func NewLevel() Level {
+	l := Level{}
+	tiles := l.CreateTiles()
+	l.Tiles = tiles
+	return l
 }
 
 // MapTile 1つのタイルを表現する構造体
@@ -42,13 +30,13 @@ type MapTile struct {
 }
 
 // GetIndexFromXY マップタイルの構造を1次元のスライスで表現しているのでスライス上のインデックスをX,Yから取得する
-func GetIndexFromXY(x, y int) int {
+func (level *Level) GetIndexFromXY(x, y int) int {
 	gb := NewGameData()
 	return (y * gb.ScreenWidth) + x
 }
 
 // CreateTiles マップの生成と
-func CreateTiles() []MapTile {
+func (level *Level) CreateTiles() []MapTile {
 	gd := NewGameData()
 	//	0個の要素を持ったMapTile型のスライスを生成
 	tiles := make([]MapTile, 0)
