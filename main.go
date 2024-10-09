@@ -22,7 +22,7 @@ func (g *Game) Update() error {
 // Draw 描画ループ毎に呼ばれ、ここでBlitがおこなわれる
 func (g *Game) Draw(screen *ebiten.Image) {
 	//	とりあえず最初のダンジョンの最初のレベルを表示
-	level := g.Map.Dungeons[0].Levels[0]
+	level := g.Map.CurrentLevel
 	level.DrawLevel(screen)
 
 	ProcessRenderables(g, level, screen)
@@ -35,7 +35,8 @@ func (g *Game) Layout(_, _ int) (screenWidth, screenHeight int) {
 }
 
 type GameMap struct {
-	Dungeons []Dungeon
+	Dungeons     []Dungeon
+	CurrentLevel Level
 }
 
 func NewGameMap() GameMap {
@@ -53,7 +54,7 @@ func NewGameMap() GameMap {
 	dungeons = append(dungeons, d)
 
 	//	ゲームマップの作成
-	gm := GameMap{Dungeons: dungeons}
+	gm := GameMap{Dungeons: dungeons, CurrentLevel: l}
 
 	return gm
 }

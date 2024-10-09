@@ -19,10 +19,20 @@ func TryMovePlayer(g *Game) {
 		x = 1
 	}
 
+	level := g.Map.CurrentLevel
+
 	players := g.WorldTags["players"]
 	for _, result := range g.World.Query(players) {
 		pos := result.Components[position].(*Position)
-		pos.X += x
-		pos.Y += y
+		//	移動先のタイルを取得
+		nextTile := level.GetIndexFromXY(pos.X+x, pos.Y+y)
+
+		//	移動先のタイルの情報を取得
+		tile := level.Tiles[nextTile]
+
+		if tile.Blocked != true {
+			pos.X += x
+			pos.Y += y
+		}
 	}
 }
