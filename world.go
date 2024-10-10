@@ -8,7 +8,7 @@ import (
 
 // すべてのエンティティのコンテナ
 
-func InitializeWorld() (*ecs.Manager, map[string]ecs.Tag) {
+func InitializeWorld(startingLevel Level) (*ecs.Manager, map[string]ecs.Tag) {
 	tags := make(map[string]ecs.Tag)
 	manager := ecs.NewManager()
 
@@ -22,6 +22,10 @@ func InitializeWorld() (*ecs.Manager, map[string]ecs.Tag) {
 		log.Fatal(err)
 	}
 
+	//	レベル内に生成された部屋の中心を取得
+	startingRoom := startingLevel.Rooms[0]
+	x, y := startingRoom.Center()
+
 	manager.NewEntity().
 		AddComponent(player, Player{}).
 		AddComponent(renderable, &Renderable{
@@ -29,8 +33,8 @@ func InitializeWorld() (*ecs.Manager, map[string]ecs.Tag) {
 		}).
 		AddComponent(movable, Movable{}).
 		AddComponent(position, &Position{
-			X: 40,
-			Y: 25,
+			X: x,
+			Y: y,
 		})
 
 	//	プレイヤーとして認識されるのはこの2つのコンポーネントを持っているもの

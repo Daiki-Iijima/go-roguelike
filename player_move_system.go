@@ -26,7 +26,6 @@ func TryMovePlayer(g *Game) {
 		pos := result.Components[position].(*Position)
 		//	移動先のタイルを取得
 		nextTile := level.GetIndexFromXY(pos.X+x, pos.Y+y)
-
 		//	移動先のタイルの情報を取得
 		tile := level.Tiles[nextTile]
 

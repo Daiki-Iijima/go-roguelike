@@ -61,9 +61,10 @@ func NewGameMap() GameMap {
 
 func NewGame() *Game {
 	g := &Game{}
-	world, tags := InitializeWorld()
-
 	g.Map = NewGameMap()
+
+	world, tags := InitializeWorld(g.Map.CurrentLevel)
+
 	g.World = world
 	g.WorldTags = tags
 
